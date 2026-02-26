@@ -1,38 +1,11 @@
-# 🤖 LeetCode Automator
+#  LeetCode Automator
 ### Automated Problem Solving & Submission System
 **Course:** Python & Full Stack Development | Lovely Professional University  
-**Tech:** FastAPI · GPT-4o · Selenium · HTML/CSS/JS
+**Tech:** FastAPI · groqAi · Selenium · HTML/CSS/JS
 
 ---
 
-## 🏗 Architecture Overview
-
-```
-User (Browser)
-    │
-    ▼
-┌─────────────────────────────────────────┐
-│          ONE-PAGE FRONTEND              │
-│  index.html (HTML + Tailwind + Vanilla) │
-│  • Problem number input                 │
-│  • Live pipeline status (WebSocket)     │
-│  • Syntax-highlighted solution display  │
-│  • Submission history table             │
-└──────────────┬──────────────────────────┘
-               │ HTTP POST /api/solve
-               ▼
-┌─────────────────────────────────────────┐
-│           FASTAPI BACKEND               │
-└──┬───────┬───────┬────────┬─────────────┘
-   │       │       │        │
-   ▼       ▼       ▼        ▼
-Scraper  GPT-4o  Submit  Logger
-Module   Module  Module  Module
-```
-
----
-
-## 📁 Project Structure
+##  Project Structure
 
 ```
 leetcode-automator/
@@ -40,7 +13,7 @@ leetcode-automator/
 │   ├── main.py                  # FastAPI app, routes, WebSocket
 │   └── modules/
 │       ├── scraper.py           # Module 1 & 2: LeetCode GraphQL scraper
-│       ├── gpt_solver.py        # Module 3: GPT-4o prompt engineering
+│       ├── gpt_solver.py        # Module 3: prompt engineering
 │       ├── submitter.py         # Module 5: Selenium auto-submitter
 │       └── logger.py            # Module 6: JSON analytics & logging
 ├── frontend/
@@ -56,12 +29,14 @@ leetcode-automator/
 
 ---
 
-## ⚡ Quick Start
-
+##  Quick Start
+## Prerequisits
+- Python
+- groq ai api key
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/leetcode-automator
+git clone https://github.com/Uday10001/LeetCode-Automated
 cd leetcode-automator
 pip install -r requirements.txt
 ```
@@ -70,8 +45,6 @@ pip install -r requirements.txt
 
 ```bash
 cp .env.example .env
-# Edit .env and set:
-# OPENAI_API_KEY=sk-your-key-here
 ```
 
 ### 3. (Optional) Set Up Browser for Auto-Submit
@@ -91,7 +64,7 @@ python run.py
 
 ---
 
-## 🔌 API Reference
+##  API Reference
 
 | Method | Endpoint              | Description               |
 |--------|-----------------------|---------------------------|
@@ -130,7 +103,7 @@ python run.py
 
 ---
 
-## 🧠 Module Details
+##  Module Details
 
 ### Module 1 & 2: LeetCode Scraper (`scraper.py`)
 - Uses LeetCode's **official GraphQL API** (no browser needed for fetching)
@@ -155,46 +128,4 @@ python run.py
 - JSON file-based storage (`logs/submissions.json`)
 - Analytics: acceptance rate, difficulty breakdown, history
 
----
 
-## 🛡 Ethical Use Notice
-
-This tool is built for **learning purposes**:
-- You must understand every line of generated code
-- Do not use for contest cheating or paid problem bypassing
-- LeetCode's Terms of Service apply
-
----
-
-## 📊 Evaluation Checklist
-
-| Criteria         | Points | Implementation |
-|-----------------|--------|----------------|
-| Implementation   | 50     | ✅ Full pipeline |
-| Code Quality     | 15     | ✅ Modular, documented |
-| Blog             | 15     | 📝 Write on Medium |
-| Video            | 10     | 🎥 Record with OBS |
-| Viva             | 10     | 🎓 Understand each module |
-
----
-
-## 🎥 OBS Recording Tips
-
-1. Show the frontend → enter problem #1 (Two Sum)
-2. Watch the live pipeline stages animate
-3. Show the generated solution with syntax highlighting
-4. Toggle auto-submit ON → show the Selenium browser opening
-5. Show the history table populating
-6. Briefly walk through each `modules/` file
-
----
-
-## 📝 Medium Blog Outline
-
-1. **Problem Statement** — why automate LeetCode?
-2. **Architecture** — the 6-module pipeline diagram
-3. **LeetCode GraphQL API** — how we fetch without Selenium
-4. **Prompt Engineering** — system prompt design decisions
-5. **Auto-Submission** — Selenium + persistent Chrome profile trick
-6. **Frontend Design** — WebSocket for live updates, syntax highlighting
-7. **Results & Learnings**
