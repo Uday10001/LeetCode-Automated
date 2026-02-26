@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode Automator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a08;
+      --surface: #111110;
+      --border: #272724;
+      --border-bright: #3a3a36;
+      --text: #e8e6df;
+      --text-dim: #6b6960;
+      --text-muted: #3d3c38;
+      --accent: #c8f060;
+      --accent-dim: #8aaa30;
+      --easy: #4ade80;
+      --medium: #fb923c;
+      --hard: #f87171;
+      --accepted: #4ade80;
+      --error: #f87171;
+      --mono: 'Space Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+      --sans: 'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999; opacity: 0.4;
+    }
+
+    /* ── Layout ── */
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+    .logo span { color: var(--accent); }
+
+    .header-tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 0 60px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--accent-dim);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before { content: '// '; color: var(--text-muted); }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 1.0;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-subtitle {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-top: 18px;
+    }
+
+    /* ── Input Section ── */
+    .input-section {
+      padding: 0 0 40px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .input-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 28px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .input-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent) 0%, transparent 70%);
+    }
+
+    .input-label {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-bright);
+      background: var(--bg);
+      flex: 1;
+      min-width: 200px;
+      transition: border-color 0.2s;
+    }
+    .input-group:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 240, 96, 0.07);
+    }
+
+    .input-prefix {
+      padding: 0 14px;
+      font-size: 13px;
+      color: var(--accent);
+      border-right: 1px solid var(--border-bright);
+      height: 48px;
+      display: flex;
+      align-items: center;
+      user-select: none;
+    }
+
+    input[type="number"] {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      padding: 0 16px;
+      height: 48px;
+      flex: 1;
+      width: 100px;
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .toggle-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+
+    .toggle {
+      width: 34px; height: 18px;
+      background: var(--border-bright);
+      border-radius: 9px;
+      position: relative;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--accent); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 14px; height: 14px;
+      background: var(--bg);
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle.on::after { transform: translateX(16px); }
+
+    .btn-solve {
+      background: var(--accent);
+      color: #0a0a08;
+      border: none;
+      padding: 0 28px;
+      height: 48px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .btn-solve:hover { background: #d4f57a; transform: translateY(-1px); }
+    .btn-solve:active { transform: translateY(0); }
+    .btn-solve:disabled {
+      background: var(--border-bright);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── Progress Pipeline ── */
+    .pipeline {
+      display: none;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .pipeline.active { display: block; }
+
+    .pipeline-stages {
+      display: flex;
+      gap: 0;
+      margin-bottom: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .stage {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+      border-right: 1px solid var(--border);
+      transition: all 0.3s;
+      position: relative;
+    }
+    .stage:last-child { border-right: none; }
+    .stage.active { color: var(--accent); background: rgba(200,240,96,0.05); }
+    .stage.done { color: var(--text-dim); }
+    .stage.active::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--accent);
+      animation: slideIn 0.3s ease;
+    }
+
+    .pipeline-log {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      min-height: 22px;
+    }
+    .pipeline-log::before { content: '▸ '; color: var(--accent); }
+
+    /* ── Results Section ── */
+    #results {
+      display: none;
+      margin-top: 0;
+      animation: fadeUp 0.5s ease both;
+    }
+    #results.visible { display: block; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .problem-title-display {
+      font-family: var(--serif);
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    .difficulty-badge {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+    .difficulty-badge.Easy { background: rgba(74,222,128,0.1); color: var(--easy); border: 1px solid rgba(74,222,128,0.3); }
+    .difficulty-badge.Medium { background: rgba(251,146,60,0.1); color: var(--medium); border: 1px solid rgba(251,146,60,0.3); }
+    .difficulty-badge.Hard { background: rgba(248,113,113,0.1); color: var(--hard); border: 1px solid rgba(248,113,113,0.3); }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 640px) { .results-grid { grid-template-columns: 1fr; } }
+
+    .stat-card {
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+    }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .stat-value.accepted { color: var(--accepted); }
+    .stat-value.error { color: var(--error); }
+
+    /* ── Code Block ── */
+    .code-section {
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: var(--surface);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-header-label {
+      font-size: 9px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .btn-copy {
+      background: transparent;
+      border: 1px solid var(--border-bright);
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      padding: 4px 12px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+    .btn-copy:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-copy.copied { border-color: var(--accepted); color: var(--accepted); }
+
+    pre {
+      padding: 24px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+      white-space: pre;
+      tab-size: 4;
+    }
+
+    /* Syntax highlighting */
+    .kw { color: #c792ea; }
+    .func { color: #82aaff; }
+    .str { color: #c3e88d; }
+    .num { color: #f78c6c; }
+    .cmt { color: #546e7a; font-style: italic; }
+    .cls { color: #ffcb6b; }
+    .self { color: #f07178; }
+
+    /* ── History Section ── */
+    .history-section {
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .section-title {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .history-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .history-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-dim);
+      vertical-align: middle;
+    }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .history-table td:first-child { color: var(--accent); font-weight: 700; }
+
+    .tag-accepted { color: var(--accepted); }
+    .tag-failed { color: var(--error); }
+    .tag-pending { color: var(--text-muted); }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: auto;
+      padding: 32px 0 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideIn {
+      from { transform: scaleX(0); transform-origin: left; }
+      to   { transform: scaleX(1); transform-origin: left; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .pulsing { animation: pulse 1.2s ease infinite; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+
+    /* ── Error state ── */
+    .error-box {
+      border: 1px solid rgba(248,113,113,0.3);
+      background: rgba(248,113,113,0.05);
+      padding: 14px 18px;
+      color: var(--error);
+      font-size: 12px;
+      margin-top: 16px;
+      display: none;
+    }
+    .error-box.visible { display: block; }
+    .error-box::before { content: '✗  '; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo"><span>#</span> LEETCODE<span>_</span>AUTOMATOR</div>
+    <div class="header-tag">Python · GPT-4o · Selenium</div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <div class="hero-eyebrow">Automated Problem Solver</div>
+    <h1 class="hero-title">Enter a number.<br><em>Get a solution.</em></h1>
+    <p class="hero-subtitle">
+      Paste a LeetCode problem number — the system fetches the problem,
+      engineers a GPT-4o prompt, and returns an optimised Python solution
+      ready to run.
+    </p>
+  </section>
+
+  <!-- ── Input Card ── -->
+  <section class="input-section">
+    <div class="input-card">
+      <span class="input-label">Problem Number</span>
+      <div class="input-row">
+        <div class="input-group">
+          <span class="input-prefix">LC #</span>
+          <input type="number" id="problemInput" placeholder="1" min="1" max="3500"
+                 onkeydown="if(event.key==='Enter') solve()" />
+        </div>
+        <button class="btn-solve" id="solveBtn" onclick="solve()">
+          Solve →
+        </button>
+      </div>
+
+      <div class="toggle-row">
+        <label class="toggle-label" onclick="toggleOption('autoSubmit')">
+          <div class="toggle" id="toggle-autoSubmit"></div>
+          Auto-submit to LeetCode
+        </label>
+      </div>
+
+      <!-- Pipeline status -->
+      <div class="pipeline" id="pipeline">
+        <div class="pipeline-stages">
+          <div class="stage" id="stage-fetch">Fetch</div>
+          <div class="stage" id="stage-extract">Extract</div>
+          <div class="stage" id="stage-gpt">GPT-4o</div>
+          <div class="stage" id="stage-submit">Submit</div>
+          <div class="stage" id="stage-log">Log</div>
+        </div>
+        <div class="pipeline-log" id="pipelineLog">Initializing...</div>
+      </div>
+
+      <div class="error-box" id="errorBox"></div>
+    </div>
+  </section>
+
+  <!-- ── Results ── -->
+  <section id="results">
+    <div class="results-header">
+      <div>
+        <div style="font-size:10px;letter-spacing:.15em;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;" id="problemNum"></div>
+        <div class="problem-title-display" id="problemTitle">—</div>
+      </div>
+      <div class="difficulty-badge" id="difficultyBadge">—</div>
+    </div>
+
+    <div class="results-grid">
+      <div class="stat-card">
+        <div class="stat-label">Submission Status</div>
+        <div class="stat-value" id="statusVal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Runtime / Memory</div>
+        <div class="stat-value" id="runtimeVal">—</div>
+      </div>
+    </div>
+
+    <div class="code-section">
+      <div class="code-header">
+        <span class="code-header-label">Generated Solution — Python 3</span>
+        <button class="btn-copy" id="copyBtn" onclick="copyCode()">Copy</button>
+      </div>
+      <pre id="codeBlock"></pre>
+    </div>
+  </section>
+
+  <!-- ── History ── -->
+  <section class="history-section" id="historySection" style="display:none">
+    <div class="section-title">Submission History</div>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Title</th><th>Difficulty</th>
+          <th>Status</th><th>Runtime</th><th>Time</th>
+        </tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </section>
+
+  <footer>
+    <div>LPU · Python &amp; Full Stack Development · 2026</div>
+    <div>
+      <a href="/api/logs" target="_blank">logs.json</a>
+      &nbsp;·&nbsp;
+      <a href="/docs" target="_blank">API docs</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────────
+  const opts = { autoSubmit: false };
+  let ws = null;
+  let currentCode = '';
+
+  // ── WebSocket ──────────────────────────────────────────────────────────────
+  function connectWS() {
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    ws = new WebSocket(`${proto}://${location.host}/ws/status`);
+    ws.onmessage = (e) => {
+      const msg = JSON.parse(e.data);
+      updatePipeline(msg.stage, msg.message);
+    };
+    ws.onclose = () => setTimeout(connectWS, 2000);
+  }
+  connectWS();
+
+  // ── Toggle options ─────────────────────────────────────────────────────────
+  function toggleOption(key) {
+    opts[key] = !opts[key];
+    document.getElementById(`toggle-${key}`).classList.toggle('on', opts[key]);
+  }
+
+  // ── Pipeline UI ────────────────────────────────────────────────────────────
+  const stageMap = {
+    starting: 'fetch', scraping: 'extract', solving: 'gpt',
+    submitting: 'submit', submitted: 'submit', done: 'log', error: null
+  };
+
+  function updatePipeline(stage, message) {
+    document.getElementById('pipelineLog').textContent = message;
+    const targetStage = stageMap[stage];
+
+    document.querySelectorAll('.stage').forEach(el => {
+      el.classList.remove('active', 'pulsing');
+    });
+
+    if (targetStage) {
+      const el = document.getElementById(`stage-${targetStage}`);
+      if (el) {
+        el.classList.add('active', 'pulsing');
+        // Mark all previous as done
+        const stages = ['fetch', 'extract', 'gpt', 'submit', 'log'];
+        const idx = stages.indexOf(targetStage);
+        stages.slice(0, idx).forEach(s => {
+          document.getElementById(`stage-${s}`).classList.add('done');
+        });
+      }
+    }
+
+    if (stage === 'done') {
+      document.querySelectorAll('.stage').forEach(el => {
+        el.classList.add('done');
+        el.classList.remove('active', 'pulsing');
+      });
+    }
+  }
+
+  // ── Main solve function ────────────────────────────────────────────────────
+  async function solve() {
+    const num = parseInt(document.getElementById('problemInput').value);
+    if (!num || num < 1) {
+      showError('Please enter a valid problem number (e.g. 1, 42, 200)');
+      return;
+    }
+
+    const btn = document.getElementById('solveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Running...';
+    hideError();
+
+    // Show pipeline
+    document.getElementById('pipeline').classList.add('active');
+    document.getElementById('pipelineLog').textContent = 'Starting pipeline...';
+    document.querySelectorAll('.stage').forEach(el => {
+      el.classList.remove('active', 'done', 'pulsing');
+    });
+
+    // Hide old results
+    document.getElementById('results').classList.remove('visible');
+
+    try {
+      const res = await fetch('/api/solve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          problem_number: num,
+          auto_submit: opts.autoSubmit,
+          language: 'python3'
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || 'Unknown server error');
+      }
+
+      const data = await res.json();
+      displayResult(data);
+      loadHistory();
+
+    } catch (err) {
+      showError(err.message);
+      document.getElementById('pipeline').classList.remove('active');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Solve →';
+    }
+  }
+
+  // ── Display results ────────────────────────────────────────────────────────
+  function displayResult(data) {
+    currentCode = data.solution;
+
+    document.getElementById('problemNum').textContent = `Problem #${data.problem_number}`;
+    document.getElementById('problemTitle').textContent = data.title;
+
+    const badge = document.getElementById('difficultyBadge');
+    badge.textContent = data.difficulty;
+    badge.className = `difficulty-badge ${data.difficulty}`;
+
+    // Status
+    const statusEl = document.getElementById('statusVal');
+    const status = data.submission_status || 'Not submitted';
+    statusEl.textContent = status;
+    statusEl.className = 'stat-value ' +
+      (status.includes('Accepted') ? 'accepted' :
+       status.includes('Error') || status.includes('Wrong') ? 'error' : '');
+
+    // Runtime
+    const rt = [data.runtime, data.memory].filter(Boolean).join(' · ');
+    document.getElementById('runtimeVal').textContent = rt || '—';
+
+    // Code with syntax highlighting
+    document.getElementById('codeBlock').innerHTML = highlight(data.solution);
+
+    // Show results
+    document.getElementById('results').classList.add('visible');
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── Syntax highlighting ────────────────────────────────────────────────────
+  function highlight(code) {
+    const escaped = code
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    return escaped
+      // Comments
+      .replace(/(#[^\n]*)/g, '<span class="cmt">$1</span>')
+      // Strings
+      .replace(/("""[\s\S]*?"""|'''[\s\S]*?'''|"[^"]*"|'[^']*')/g, '<span class="str">$1</span>')
+      // Keywords
+      .replace(/\b(def|class|return|if|elif|else|for|while|in|not|and|or|import|from|as|with|try|except|finally|raise|pass|break|continue|lambda|yield|None|True|False|self)\b/g,
+        (m) => m === 'self' ? `<span class="self">${m}</span>` : `<span class="kw">${m}</span>`)
+      // Class names
+      .replace(/\bclass\s+(\w+)/g, 'class <span class="cls">$1</span>')
+      // Function definitions
+      .replace(/\bdef\s+(\w+)/g, 'def <span class="func">$1</span>')
+      // Numbers
+      .replace(/\b(\d+)\b/g, '<span class="num">$1</span>');
+  }
+
+  // ── Copy code ─────────────────────────────────────────────────────────────
+  function copyCode() {
+    navigator.clipboard.writeText(currentCode).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // ── History ───────────────────────────────────────────────────────────────
+  async function loadHistory() {
+    try {
+      const res = await fetch('/api/logs');
+      const logs = await res.json();
+      if (!logs.length) return;
+
+      document.getElementById('historySection').style.display = 'block';
+      const tbody = document.getElementById('historyBody');
+      tbody.innerHTML = logs.slice(0, 10).map(log => {
+        const status = log.submission_status || 'Not submitted';
+        const statusClass = status.includes('Accepted') ? 'tag-accepted' :
+                            status.includes('failed') || status.includes('Error') ? 'tag-failed' : 'tag-pending';
+        const time = new Date(log.timestamp).toLocaleTimeString();
+        return `<tr>
+          <td>${log.problem_number}</td>
+          <td>${log.title}</td>
+          <td>${log.difficulty}</td>
+          <td class="${statusClass}">${status}</td>
+          <td>${log.runtime || '—'}</td>
+          <td>${time}</td>
+        </tr>`;
+      }).join('');
+    } catch (e) { /* silently fail */ }
+  }
+
+  // ── Error helpers ──────────────────────────────────────────────────────────
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.classList.add('visible');
+  }
+  function hideError() {
+    document.getElementById('errorBox').classList.remove('visible');
+  }
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  loadHistory();
+  document.getElementById('problemInput').focus();
+</script>
+</body>
+</html>

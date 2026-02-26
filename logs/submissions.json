@@ -1,0 +1,32 @@
+[
+  {
+    "problem_number": 123,
+    "title": "Best Time to Buy and Sell Stock III",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def maxProfit(self, prices: list[int]) -> int:\n        # Initialize variables to store the maximum profit after the first buy, first sell, second buy, and second sell\n        first_buy, first_sell, second_buy, second_sell = float('-inf'), 0, float('-inf'), 0\n        \n        # Iterate over the prices\n        for price in prices:\n            # Update the maximum profit after the first buy\n            first_buy = max(first_buy, -price)\n            # Update the maximum profit after the first sell\n            first_sell = max(first_sell, first_buy + price)\n            # Update the maximum profit after the second buy\n            second_buy = max(second_buy, first_sell - price)\n            # Update the maximum profit after the second sell\n            second_sell = max(second_sell, second_buy + price)\n        \n        # Return the maximum profit after the second sell\n        return second_sell\n\n# Time Complexity: O(n)\n# Space Complexity: O(1)\n# Algorithm: Dynamic programming to track the maximum profit after each transaction",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T11:23:47.217205"
+  },
+  {
+    "problem_number": 124,
+    "title": "Binary Tree Maximum Path Sum",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def maxPathSum(self, root):\n        # Initialize the maximum path sum as negative infinity\n        self.max_sum = float('-inf')\n        \n        # Define a helper function to calculate the maximum path sum recursively\n        def max_gain(node):\n            # Base case: If the node is None, return 0\n            if not node:\n                return 0\n            \n            # Recursively calculate the maximum path sum for the left and right subtrees\n            left_gain = max(max_gain(node.left), 0)\n            right_gain = max(max_gain(node.right), 0)\n            \n            # Update the maximum path sum if the current path sum is greater\n            price_newpath = node.val + left_gain + right_gain\n            self.max_sum = max(self.max_sum, price_newpath)\n            \n            # Return the maximum path sum for the current node\n            return node.val + max(left_gain, right_gain)\n        \n        # Call the helper function to start the recursion\n        max_gain(root)\n        \n        # Return the maximum path sum\n        return self.max_sum\n\n# Time Complexity: O(N), where N is the number of nodes in the tree\n# Space Complexity: O(H), where H is the height of the tree\n# Algorithm: Depth-First Search (DFS) with recursion to calculate the maximum path sum",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T11:24:07.796888"
+  },
+  {
+    "problem_number": 100,
+    "title": "Same Tree",
+    "difficulty": "Easy",
+    "solution": "# Definition for a binary tree node.\nclass TreeNode:\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\nclass Solution:\n    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:\n        # Base case: if both trees are empty, they are the same\n        if not p and not q:\n            return True\n        \n        # If one tree is empty and the other is not, they are not the same\n        if not p or not q:\n            return False\n        \n        # If the values of the current nodes are different, the trees are not the same\n        if p.val != q.val:\n            return False\n        \n        # Recursively check the left and right subtrees\n        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)\n\n# Time Complexity: O(n)\n# Space Complexity: O(n)\n# Algorithm: Recursive depth-first search to compare the structure and values of two binary trees",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T11:27:27.223751"
+  }
+]
