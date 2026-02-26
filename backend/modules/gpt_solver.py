@@ -53,7 +53,7 @@ class GPTSolver:
     """
 
     def __init__(self, model: str = "llama-3.3-70b-versatile"):
-        api_key = os.getenv("API_KEY")
+        api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             raise EnvironmentError(
                 "OPENAI_API_KEY not set. "

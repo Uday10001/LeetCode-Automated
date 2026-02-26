@@ -28,5 +28,15 @@
     "runtime": null,
     "memory": null,
     "timestamp": "2026-02-26T11:27:27.223751"
+  },
+  {
+    "problem_number": 12,
+    "title": "Integer to Roman",
+    "difficulty": "Medium",
+    "solution": "class Solution:\n    def intToRoman(self, num: int) -> str:\n        # Define a dictionary to map decimal values to their corresponding Roman numerals\n        roman_numerals = {\n            1000: 'M', 900: 'CM', 500: 'D', 400: 'CD',\n            100: 'C', 90: 'XC', 50: 'L', 40: 'XL',\n            10: 'X', 9: 'IX', 5: 'V', 4: 'IV', 1: 'I'\n        }\n        \n        # Initialize an empty string to store the result\n        result = ''\n        \n        # Iterate over the decimal values in descending order\n        for value, numeral in roman_numerals.items():\n            # Calculate the number of times the current decimal value fits into the number\n            count = num // value\n            \n            # Subtract the current decimal value from the number\n            num -= count * value\n            \n            # Append the corresponding Roman numeral to the result\n            result += numeral * count\n        \n        # Return the resulting Roman numeral\n        return result\n\n# Time Complexity: O(1)\n# Space Complexity: O(1)\n# Algorithm: Mapping decimal values to Roman numerals using a dictionary and iterating over the values in descending order.",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T14:18:08.443628"
   }
 ]
