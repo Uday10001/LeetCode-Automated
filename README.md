@@ -111,7 +111,7 @@ python run.py
 - Strips HTML, extracts constraints, gets starter code
 
 ### Module 3: GPT Solver (`gpt_solver.py`)
-- Model: **GPT-4o** (temperature=0.1 for deterministic output)
+- Model: Groq llama-3.3-70b-versatile
 - System prompt enforces: optimal complexity, LeetCode class format, inline comments
 - Extracts clean code from markdown code blocks
 
