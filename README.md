@@ -5,30 +5,6 @@
 
 ---
 
-##  Project Structure
-
-```
-leetcode-automator/
-├── backend/
-│   ├── main.py                  # FastAPI app, routes, WebSocket
-│   └── modules/
-│       ├── scraper.py           # Module 1 & 2: LeetCode GraphQL scraper
-│       ├── gpt_solver.py        # Module 3: prompt engineering
-│       ├── submitter.py         # Module 5: Selenium auto-submitter
-│       └── logger.py            # Module 6: JSON analytics & logging
-├── frontend/
-│   └── index.html               # Single-page app (no framework)
-├── logs/
-│   └── submissions.json         # Auto-created submission log
-├── run.py                       # Server startup script
-├── setup_browser.py             # One-time LeetCode login helper
-├── requirements.txt
-├── .env.example
-└── README.md
-```
-
----
-
 ##  Quick Start
 ## Prerequisits
 - Python
