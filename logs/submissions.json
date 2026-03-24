@@ -38,5 +38,95 @@
     "runtime": null,
     "memory": null,
     "timestamp": "2026-02-26T14:18:08.443628"
+  },
+  {
+    "problem_number": 13,
+    "title": "Roman to Integer",
+    "difficulty": "Easy",
+    "solution": "class Solution:\n    def romanToInt(self, s: str) -> int:\n        # Create a dictionary to store the values of Roman numerals\n        roman_values = {\n            'I': 1,\n            'V': 5,\n            'X': 10,\n            'L': 50,\n            'C': 100,\n            'D': 500,\n            'M': 1000\n        }\n        \n        # Initialize the result variable to 0\n        result = 0\n        \n        # Iterate over the input string\n        for i in range(len(s)):\n            # If the current numeral is not the last one and its value is less than the next one\n            if i < len(s) - 1 and roman_values[s[i]] < roman_values[s[i + 1]]:\n                # Subtract the value of the current numeral from the result\n                result -= roman_values[s[i]]\n            else:\n                # Add the value of the current numeral to the result\n                result += roman_values[s[i]]\n        \n        # Return the result\n        return result\n\n# Time Complexity: O(n)\n# Space Complexity: O(1)\n# Algorithm: Iterate over the input string and add or subtract the values of Roman numerals based on their positions.",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T16:44:55.463250"
+  },
+  {
+    "problem_number": 56,
+    "title": "Merge Intervals",
+    "difficulty": "Medium",
+    "solution": "class Solution:\n    def merge(self, intervals: list[list[int]]) -> list[list[int]]:\n        # If the input list is empty, return an empty list\n        if not intervals:\n            return []\n\n        # Sort the intervals based on their start value\n        intervals.sort(key=lambda x: x[0])  # O(n log n) time complexity\n\n        # Initialize the result list with the first interval\n        merged = [intervals[0]]\n\n        # Iterate over the remaining intervals\n        for current in intervals[1:]:  # O(n) time complexity\n            # Get the last interval in the result list\n            last = merged[-1]\n\n            # Check if the current interval overlaps with the last interval\n            if current[0] <= last[1]:  # O(1) time complexity\n                # Merge the current interval with the last interval\n                merged[-1] = [last[0], max(last[1], current[1])]\n            else:\n                # Add the current interval to the result list\n                merged.append(current)\n\n        # Return the result list\n        return merged\n\n# Time Complexity: O(n log n)\n# Space Complexity: O(n)\n# Algorithm: Sorting and Iteration to merge overlapping intervals",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T16:45:09.539548"
+  },
+  {
+    "problem_number": 566,
+    "title": "Reshape the Matrix",
+    "difficulty": "Easy",
+    "solution": "class Solution:\n    def matrixReshape(self, mat: list[list[int]], r: int, c: int) -> list[list[int]]:\n        # Get the number of rows and columns in the original matrix\n        m, n = len(mat), len(mat[0])\n        \n        # Check if the reshape operation is possible\n        if m * n != r * c:\n            # If not, return the original matrix\n            return mat\n        \n        # Initialize the reshaped matrix\n        reshaped_mat = [[0] * c for _ in range(r)]\n        \n        # Initialize indices for the original and reshaped matrices\n        idx = 0\n        \n        # Iterate over the original matrix and fill the reshaped matrix\n        for i in range(m):\n            for j in range(n):\n                # Calculate the corresponding indices in the reshaped matrix\n                reshaped_mat[idx // c][idx % c] = mat[i][j]\n                idx += 1\n        \n        # Return the reshaped matrix\n        return reshaped_mat\n\n# Time Complexity: O(m * n)\n# Space Complexity: O(m * n)\n# Algorithm: Reshape the matrix by iterating over the original matrix and filling the reshaped matrix in row-traversing order.",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T20:13:01.097335"
+  },
+  {
+    "problem_number": 677,
+    "title": "Map Sum Pairs",
+    "difficulty": "Medium",
+    "solution": "class MapSum:\n    def __init__(self):\n        # Initialize a dictionary to store key-value pairs\n        self.map = {}\n\n    def insert(self, key: str, val: int) -> None:\n        # Insert or update the key-value pair in the dictionary\n        self.map[key] = val\n\n    def sum(self, prefix: str) -> int:\n        # Initialize the sum to 0\n        total = 0\n        # Iterate over each key in the dictionary\n        for key in self.map:\n            # Check if the key starts with the given prefix\n            if key.startswith(prefix):\n                # If it does, add the value to the total sum\n                total += self.map[key]\n        # Return the total sum\n        return total\n\nclass Solution:\n    def solve(self, operations):\n        map_sum = MapSum()\n        result = []\n        for op in operations:\n            if op[0] == \"MapSum\":\n                result.append(None)\n            elif op[0] == \"insert\":\n                map_sum.insert(op[1], op[2])\n                result.append(None)\n            elif op[0] == \"sum\":\n                result.append(map_sum.sum(op[1]))\n        return result\n\n# Time Complexity: O(n*m) where n is the number of operations and m is the maximum length of a key\n# Space Complexity: O(n) where n is the number of key-value pairs\n# Algorithm: Using a dictionary to store key-value pairs and iterating over the keys to calculate the sum for a given prefix",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T20:13:59.023689"
+  },
+  {
+    "problem_number": 10,
+    "title": "Regular Expression Matching",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def isMatch(self, s: str, p: str) -> bool:\n        # Initialize a 2D array to store the dynamic programming table\n        dp = [[False] * (len(p) + 1) for _ in range(len(s) + 1)]\n        \n        # An empty pattern matches an empty string\n        dp[len(s)][len(p)] = True\n        \n        # Fill the last row of the table\n        for i in range(len(s), -1, -1):\n            for j in range(len(p) - 1, -1, -1):\n                # If the current character in the pattern is '*', \n                # then we have two possibilities: \n                # 1. We ignore the '*' and the preceding character, \n                #    so we check if the remaining string matches the remaining pattern.\n                # 2. We use the '*', so we check if the current character in the string \n                #    matches the preceding character in the pattern, and then we check \n                #    if the remaining string matches the remaining pattern.\n                if p[j] == '*':\n                    dp[i][j] = dp[i][j + 1] or (i < len(s) and (p[j - 1] == s[i] or p[j - 1] == '.') and dp[i + 1][j])\n                # If the current character in the pattern is not '*', \n                # then we simply check if the current character in the string \n                # matches the current character in the pattern, and then we check \n                # if the remaining string matches the remaining pattern.\n                else:\n                    dp[i][j] = i < len(s) and (p[j] == s[i] or p[j] == '.') and dp[i + 1][j + 1]\n        \n        # The result is stored in the top-left corner of the table\n        return dp[0][0]",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-02-26T20:14:23.444005"
+  },
+  {
+    "problem_number": 123,
+    "title": "Best Time to Buy and Sell Stock III",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def maxProfit(self, prices: list[int]) -> int:\n        # Initialize variables to store the maximum profit after the first and second transactions\n        buy1, sell1, buy2, sell2 = float('-inf'), 0, float('-inf'), 0\n        \n        # Iterate over the prices array\n        for price in prices:\n            # Update the maximum profit after the first buy\n            buy1 = max(buy1, -price)\n            # Update the maximum profit after the first sell\n            sell1 = max(sell1, buy1 + price)\n            # Update the maximum profit after the second buy\n            buy2 = max(buy2, sell1 - price)\n            # Update the maximum profit after the second sell\n            sell2 = max(sell2, buy2 + price)\n        \n        # Return the maximum profit after the second sell\n        return sell2",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-03-11T10:48:59.036033"
+  },
+  {
+    "problem_number": 123,
+    "title": "Best Time to Buy and Sell Stock III",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def maxProfit(self, prices: list[int]) -> int:\n        # Initialize variables to store the maximum profit after the first and second transactions\n        buy1, sell1, buy2, sell2 = float('-inf'), 0, float('-inf'), 0\n        \n        # Iterate over the prices\n        for price in prices:\n            # Update the maximum profit after the first buy\n            buy1 = max(buy1, -price)\n            # Update the maximum profit after the first sell\n            sell1 = max(sell1, buy1 + price)\n            # Update the maximum profit after the second buy\n            buy2 = max(buy2, sell1 - price)\n            # Update the maximum profit after the second sell\n            sell2 = max(sell2, buy2 + price)\n        \n        # Return the maximum profit after the second sell\n        return sell2",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-03-25T01:01:42.774164"
+  },
+  {
+    "problem_number": 142,
+    "title": "Linked List Cycle II",
+    "difficulty": "Medium",
+    "solution": "# Definition for singly-linked list.\nclass ListNode:\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\nclass Solution:\n    def detectCycle(self, head: ListNode) -> ListNode:\n        # Phase 1: Detecting the cycle using Floyd's Tortoise and Hare algorithm\n        tortoise = head\n        hare = head\n        while hare is not None and hare.next is not None:\n            tortoise = tortoise.next\n            hare = hare.next.next\n            if tortoise == hare:\n                break\n\n        # If there is no cycle, return None\n        if hare is None or hare.next is None:\n            return None\n\n        # Phase 2: Finding the start of the cycle\n        tortoise = head\n        while tortoise != hare:\n            tortoise = tortoise.next\n            hare = hare.next\n\n        return tortoise",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-03-25T01:02:38.528567"
+  },
+  {
+    "problem_number": 123,
+    "title": "Best Time to Buy and Sell Stock III",
+    "difficulty": "Hard",
+    "solution": "class Solution:\n    def maxProfit(self, prices: list[int]) -> int:\n        buy1, sell1, buy2, sell2 = float('-inf'), 0, float('-inf'), 0\n        for price in prices:\n            buy1 = max(buy1, -price)\n            sell1 = max(sell1, buy1 + price)\n            buy2 = max(buy2, sell1 - price)\n            sell2 = max(sell2, buy2 + price)\n        return sell2",
+    "submission_status": null,
+    "runtime": null,
+    "memory": null,
+    "timestamp": "2026-03-25T01:03:05.868341"
   }
 ]

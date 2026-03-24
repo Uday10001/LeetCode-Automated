@@ -17,13 +17,9 @@ Your task is to solve LeetCode problems with OPTIMAL time and space complexity.
 Rules:
 1. Always use the exact class/function signature provided.
 2. Provide ONLY the Python code inside a ```python code block — nothing else outside it.
-3. Add clear inline comments explaining the algorithm and key steps.
+3. Never use inline comments
 4. Use the most efficient algorithm (prefer O(n) over O(n²) where possible).
 5. Handle all edge cases mentioned in the constraints.
-6. After the solution, add a commented block:
-   # Time Complexity: O(...)
-   # Space Complexity: O(...)
-   # Algorithm: (one line explanation)
 """
 
 USER_PROMPT_TEMPLATE = """Solve this LeetCode problem:

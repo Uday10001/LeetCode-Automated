@@ -1,0 +1,4 @@
+wget
+gnupg
+chromium-browser
+chromium-chromedriver

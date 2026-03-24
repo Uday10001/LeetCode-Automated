@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.leetcode_chrome_profile/
