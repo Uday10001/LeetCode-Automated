@@ -30,12 +30,13 @@ def main():
     print(f"  ✓ API docs at http://{HOST}:{PORT}/docs")
     print("  Press CTRL+C to stop\n")
 
+    reload_mode = os.getenv("ENVIRONMENT") == "development"
     uvicorn.run(
         "backend.main:app",
         host=HOST,
         port=PORT,
-        reload=True,
-        reload_dirs=["backend"]
+        reload=reload_mode,
+        reload_dirs=["backend"] if reload_mode else None
     )
 
 
